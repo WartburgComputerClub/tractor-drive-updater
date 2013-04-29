@@ -99,7 +99,7 @@ public class MainWindow {
 					tractorRepo.fetchUpdates(null);
 					StringBuilder html = new StringBuilder();
 					html.append("<html><body><h1>Current Release: " + tractorRepo.getVersion() + "</h1>");
-					String[] updates = tractorRepo.getUpdates();
+					String[] updates = tractorRepo.getUpdateVersions();
 					html.append("<h2>Found " +  updates.length + " updates.</h2><hr />");
 					for (int i=updates.length-1;i>=0;i--) {
 						html.append("<pre>");

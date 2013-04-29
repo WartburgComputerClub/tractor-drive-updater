@@ -91,5 +91,9 @@ public class TractorRepo {
     		return updates.toArray(ret);
     	}
     }
+    
+    public String getVersion() {
+    	return version;
+    }
 
 }
