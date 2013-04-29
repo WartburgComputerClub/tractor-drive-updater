@@ -36,14 +36,16 @@ public class TractorRepo {
 		    System.out.println(originUrl);
 			throw new Exception("Invalid tractorDrive repository");
 		}
-		BufferedReader input = new BufferedReader(new FileReader(new File(repoPath + "/version")));
-		version = input.readLine();
-		input.close();
-		System.out.println(version);
+		BufferedReader input = new BufferedReader(new FileReader(new File(repoPath + "/releases")));
+		version = null;
+		try {
+		    while ((version = input.readLine()) != null);
+		} finally {
+		    input.close();
+		}
 	}
 	
 	public void fetchUpdates(ProgressMonitor monitor) throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException, IOException {
-		git.checkout().setName("release").call();
 		git.pull().call();
 		
 		updates = new ArrayList<String>();
@@ -60,7 +62,6 @@ public class TractorRepo {
 		} finally {
 		input.close();
 		}
-		git.checkout().setName("master").call();
 	}
 
     public String getReleaseNotes(String version) {
