@@ -52,6 +52,7 @@ public class TractorRepo {
 			throws RefAlreadyExistsException, RefNotFoundException,
 			InvalidRefNameException, CheckoutConflictException,
 			GitAPIException, IOException {
+	    git.checkout().setName("master").call();
 		git.pull().call();
 
 		updates = new ArrayList<String>();
@@ -69,6 +70,7 @@ public class TractorRepo {
 		} finally {
 			input.close();
 		}
+		git.checkout().setName("v" + getLatestVersion()).call()
 	}
 
 	public String getReleaseNotes(String version) {
@@ -108,14 +110,4 @@ public class TractorRepo {
 		if (updates == null) return version;
 		else return updates.get(updates.size()-1);
 	}
-
-	public void update(String version) {
-		try {
-			git.checkout().setName("v"+version).call();
-			System.out.println(version);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }
