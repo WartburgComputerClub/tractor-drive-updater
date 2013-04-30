@@ -1,4 +1,3 @@
-package com.andrewreisner.tractorDrive;
 import java.awt.EventQueue;
 
 import javax.swing.JFileChooser;
@@ -19,10 +18,10 @@ import javax.swing.JTextPane;
 
 public class MainWindow {
 
-    private JFrame frame;
+    private JFrame frmTractordriveUpdater;
     private TractorRepo repo;
 
-	/**
+    /**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
@@ -38,7 +37,7 @@ public class MainWindow {
 			public void run() {
 				try {
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.frmTractordriveUpdater.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -57,57 +56,45 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTractordriveUpdater = new JFrame();
+		frmTractordriveUpdater.setTitle("TractorDrive Updater");
+		frmTractordriveUpdater.setBounds(100, 100, 450, 300);
+		frmTractordriveUpdater.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JFileChooser fchoose = new JFileChooser();
 		fchoose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int retval = fchoose.showOpenDialog(frame.getContentPane());
+		int retval = fchoose.showOpenDialog(frmTractordriveUpdater.getContentPane());
 		
 		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.SOUTH);
+		frmTractordriveUpdater.getContentPane().add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblStatus = new JLabel("Ready");
 		panel.add(lblStatus, BorderLayout.WEST);
 		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setEnabled(false);
-		panel.add(splitPane, BorderLayout.EAST);
-		
-		JButton btnUpdate = new JButton("update");
-		splitPane.setLeftComponent(btnUpdate);
-		btnUpdate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				if (repo!= null) repo.update(repo.getVersion());
+		JButton btnClose = new JButton("Close");
+		btnClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
 			}
 		});
-		
-		JButton btnCancel = new JButton("cancel");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				if (repo != null) repo.update(repo.getVersion());
-				System.exit(1);
-			}
-		});
-		splitPane.setRightComponent(btnCancel);
+		panel.add(btnClose, BorderLayout.EAST);
 		
 		JTextPane textPane = new JTextPane();
 		textPane.setContentType("text/html");
 		textPane.setEditable(false);
 		
 		JScrollPane jsp = new JScrollPane(textPane);
-		frame.getContentPane().add(jsp, BorderLayout.CENTER);
+		frmTractordriveUpdater.getContentPane().add(jsp, BorderLayout.CENTER);
 		
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			try {
 					repo = new TractorRepo(fchoose.getSelectedFile().getAbsolutePath());
 					StringBuilder html = new StringBuilder();
-					html.append("<html><body><h1>Current Release: " + repo.getVersion() + "</h1>");
 					repo.fetchUpdates(null);
+					html.append("<html><body><h1>Update Summary: " + repo.getVersion() + " &rarr; " + repo.getLatestVersion() + "</h1>");
 					String[] updates = repo.getUpdateVersions();
-					html.append("<h2>Found " +  updates.length + " updates.</h2><hr />");
+					html.append("<h2>Installed " +  updates.length + " updates.</h2><hr />");
 					for (int i=updates.length-1;i>=0;i--) {
 						html.append("<pre>");
 						html.append(repo.getReleaseNotes(updates[i]));
@@ -118,11 +105,11 @@ public class MainWindow {
 					textPane.setCaretPosition(0);
 			}catch (Exception ex){
 				ex.printStackTrace();
-				JOptionPane.showMessageDialog(frame, "Invalid TractorDrive directory!");
+				JOptionPane.showMessageDialog(frmTractordriveUpdater, "Invalid TractorDrive directory!");
 				System.exit(1);
 			}
 		} else {
-			JOptionPane.showMessageDialog(frame, "You must select the tractorDrive directory to update!");
+			JOptionPane.showMessageDialog(frmTractordriveUpdater, "You must select the tractorDrive directory to update!");
 			System.exit(1);
 		}
 		
