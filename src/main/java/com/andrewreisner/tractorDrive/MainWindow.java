@@ -20,6 +20,7 @@ import javax.swing.JTextPane;
 public class MainWindow {
 
     private JFrame frame;
+    private TractorRepo repo;
 
 	/**
 	 * Launch the application.
@@ -77,10 +78,16 @@ public class MainWindow {
 		
 		JButton btnUpdate = new JButton("update");
 		splitPane.setLeftComponent(btnUpdate);
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				if (repo!= null) repo.update(repo.getVersion());
+			}
+		});
 		
 		JButton btnCancel = new JButton("cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
+				if (repo != null) repo.update(repo.getVersion());
 				System.exit(1);
 			}
 		});
@@ -95,15 +102,15 @@ public class MainWindow {
 		
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			try {
-					TractorRepo tractorRepo = new TractorRepo(fchoose.getSelectedFile().getAbsolutePath());
-					tractorRepo.fetchUpdates(null);
+					repo = new TractorRepo(fchoose.getSelectedFile().getAbsolutePath());
 					StringBuilder html = new StringBuilder();
-					html.append("<html><body><h1>Current Release: " + tractorRepo.getVersion() + "</h1>");
-					String[] updates = tractorRepo.getUpdateVersions();
+					html.append("<html><body><h1>Current Release: " + repo.getVersion() + "</h1>");
+					repo.fetchUpdates(null);
+					String[] updates = repo.getUpdateVersions();
 					html.append("<h2>Found " +  updates.length + " updates.</h2><hr />");
 					for (int i=updates.length-1;i>=0;i--) {
 						html.append("<pre>");
-						html.append(tractorRepo.getReleaseNotes(updates[i]));
+						html.append(repo.getReleaseNotes(updates[i]));
 						html.append("</pre><hr />");
 					}
 					html.append("</body></html>");
