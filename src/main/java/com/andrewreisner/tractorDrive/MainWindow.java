@@ -1,18 +1,19 @@
-import java.awt.EventQueue;
+package com.andrewreisner.tractorDrive;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.ProgressMonitor;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JSplitPane;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 
@@ -91,7 +92,8 @@ public class MainWindow {
 			try {
 					repo = new TractorRepo(fchoose.getSelectedFile().getAbsolutePath());
 					StringBuilder html = new StringBuilder();
-					repo.fetchUpdates(null);
+					ProgressMonitor pm = new ProgressMonitor(frmTractordriveUpdater,"Fetching Updates", "",0, 100);
+					repo.fetchUpdates(pm);
 					html.append("<html><body><h1>Update Summary: " + repo.getVersion() + " &rarr; " + repo.getLatestVersion() + "</h1>");
 					String[] updates = repo.getUpdateVersions();
 					html.append("<h2>Installed " +  updates.length + " updates.</h2><hr />");

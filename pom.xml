@@ -45,7 +45,7 @@
 	      <configuration>
 		<archive>
 		  <manifest>
-		    <mainClass>com.andrewreisner.tractorDrive.Driver</mainClass>
+		    <mainClass>com.andrewreisner.tractorDrive.MainWindow</mainClass>
 		  </manifest>
 		</archive>
 		<descriptorRefs>

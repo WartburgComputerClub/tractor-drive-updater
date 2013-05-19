@@ -2,7 +2,6 @@ package com.andrewreisner.tractorDrive;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.storage.file.FileRepository;
+import javax.swing.ProgressMonitor;
 
 public class TractorRepo {
 
@@ -70,7 +70,7 @@ public class TractorRepo {
 		} finally {
 			input.close();
 		}
-		git.checkout().setName("v" + getLatestVersion()).call()
+		git.checkout().setName("v" + getLatestVersion()).call();
 	}
 
 	public String getReleaseNotes(String version) {
@@ -107,7 +107,7 @@ public class TractorRepo {
 	}
 	
 	public String getLatestVersion() {
-		if (updates == null) return version;
+		if (updates == null || updates.size() < 1) return version;
 		else return updates.get(updates.size()-1);
 	}
 }
